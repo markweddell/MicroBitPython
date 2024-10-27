@@ -13,10 +13,12 @@ def action(speed, type):
     display.show(type)
     time=0 
     direction = compass.heading()
-    maxHeading = direction + 90
-    minHeading = direction - 90
+    maxHeading = (direction + 90)%360
+    minHeading = (direction + 270)%360
+    if minHeading>maxHeading:
+        maxHeading, minHeading = minHeading, maxHeading
     while time < speed :
-        newHeading = compass.heading() > direction + 90
+        newHeading = compass.heading() > maxHeading or compass.heading()< minHeading
         if type == "B" and gameover:
             if accelerometer.was_gesture('3g') :
                gameover = False
@@ -39,7 +41,7 @@ def action(speed, type):
 
 def randChoice():
     g=0
-    choice = random.randrange(0,2)
+    choice = random.randrange(0,3)
     if choice == 0:
         g=action(speed,"B")
     elif choice == 1:
